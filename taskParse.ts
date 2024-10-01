@@ -1,8 +1,5 @@
 import fs from 'node:fs/promises';
 import readline from 'node:readline/promises';
-import path from 'node:path';
-//
-const fileToParse = path.join('./fixtures/task.md');
 //
 async function parseFile(file: string) {
     let fileHandle: fs.FileHandle;
@@ -19,7 +16,7 @@ async function parseFile(file: string) {
         });
         for await (const line of rl) {
             const trimedLine = line.trim();
-            //parse the content betwenn 2 delimiter --- --- ignore before and after
+            //For now parse the content betwenn 2 delimiter --- --- ignore before and after
             if (trimedLine === '---') {
                 processingTask = !processingTask;
                 continue;
@@ -46,12 +43,10 @@ async function parseFile(file: string) {
                 }
             }
         }
-        console.log(JSON.stringify(taskDict, null, 2));
         return taskDict;
     } catch (error) {
         //TODO handling proper error
         throw error;
     }
 }
-//
-await parseFile(fileToParse);
+
