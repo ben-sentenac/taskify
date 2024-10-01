@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "borp",
-    "dev": "tsc -w & node --watch taskParse.js"
+    "dev": "tsc -w & node --watch taskParser.js"
   },
   "author": "",
   "license": "ISC",
