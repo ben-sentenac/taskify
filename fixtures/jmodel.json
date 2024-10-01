@@ -1,0 +1,28 @@
+{
+    "Setup Environment": {
+      "percentage": 33,
+      "subtasks": [
+        {"name": "Install required software (Node.js, Git)", "status": "Not Yet"},
+        {"name": "Set up project repository", "status": "In Progress"},
+        {"name": "Initialize the project with `npm init`", "status": "Done"}
+      ]
+    },
+    "Implement Basic Features": {
+      "percentage": 50,
+      "subtasks": [
+        {"name": "Create task input form", "status": "Not Yet"},
+        {"name": "Add functionality to add new tasks", "status": "In Progress"},
+        {"name": "Implement task deletion", "status": "Done"},
+        {"name": "Add task completion toggle", "status": "Done"}
+      ]
+    },
+    "Style and Design": {
+      "percentage": 0,
+      "subtasks": [
+        {"name": "Create basic layout and style using CSS", "status": "Not Yet"},
+        {"name": "Make the app responsive", "status": "Not Yet"},
+        {"name": "Add animations for task actions", "status": "Not Yet"}
+      ]
+    }
+  }
+  
