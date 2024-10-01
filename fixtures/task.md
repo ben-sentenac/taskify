@@ -15,7 +15,7 @@ To update a subtask, change the symbol before the subtask to reflect its current
 # Task: Implement Basic Features
 - [-] Create task input form
 - [/] Add functionality to add new tasks
-- [x] Implement task deletion
+- [-] Implement task deletion
 - [x] Add task completion toggle
 
 # Task: Style and Design

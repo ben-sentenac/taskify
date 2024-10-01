@@ -1,6 +1,21 @@
 import fs from 'node:fs/promises';
 import readline from 'node:readline/promises';
 //
+function calcProgress(subTaskArray:[]) {
+    const numberOfCompleted = subTaskArray.filter(({status}) => status === 'Done').length;
+    return Number((( numberOfCompleted / subTaskArray.length ) * 100).toFixed(2));
+}
+
+function setSubTaskStatus(status:string) {
+    switch(status) {
+        case '-':
+            return 'Not Yet';
+        case '/':
+            return 'In Progress';
+        case 'x':
+            return 'Done';   
+    }
+}
 export async function parseFile(file: string) {
     let fileHandle: fs.FileHandle;
     const taskDict = {};
@@ -35,11 +50,13 @@ export async function parseFile(file: string) {
                 if (subtaskMatch && currentTask) {
                     const subtaskStatus = subtaskMatch[1];
                     const subtaskName = subtaskMatch[2];
-                    console.log(subtaskName, subtaskStatus);
-                    taskDict[currentTask].subtask.push({
+
+                    const subtask = {
                         name: subtaskName,
-                        status: subtaskStatus
-                    });
+                        status: setSubTaskStatus(subtaskStatus)
+                    }
+                    taskDict[currentTask].subtask.push(subtask);
+                    taskDict[currentTask].percentage = calcProgress(taskDict[currentTask].subtask)
                 }
             }
         }

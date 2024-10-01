@@ -15,18 +15,19 @@ test('TaskParser Test', async (t) => {
     await t.test('it should return the correct dictionnary', async (t) => {
         const tasksDict = await parseFile(fileToParse);
         const result = {
+            percentage: 33.33,
             subtask: [
                 {
                     name: 'Install required software (Node.js, Git)',
-                    status: '-'
+                    status: 'Not Yet'
                 },
                 {
                     name: 'Set up project repository',
-                    status: '/'
+                    status: 'In Progress'
                 },
                 {
                     name: 'Initialize the project with `npm init`',
-                    status: 'x'
+                    status: 'Done'
                 }
             ]
         }
