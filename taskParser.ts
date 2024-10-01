@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import readline from 'node:readline/promises';
 //
-async function parseFile(file: string) {
+export async function parseFile(file: string) {
     let fileHandle: fs.FileHandle;
     const taskDict = {};
     let currentTask: string | null = null;
@@ -10,7 +10,7 @@ async function parseFile(file: string) {
         fileHandle = await fs.open(file, 'r');
         //TODO can replace all readline piping by new convenient method fileHanlde.readlines()
         const fileStream = fileHandle.createReadStream();
-        const rl = readline.createInterface({
+        const rl =  readline.createInterface({
             input: fileStream,
             crlfDelay: Infinity,
         });

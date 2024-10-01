@@ -7,7 +7,7 @@ To update a subtask, change the symbol before the subtask to reflect its current
 
 --- 
 
-# Task: Setup Environment123
+# Task: Setup Environment
 - [-] Install required software (Node.js, Git)
 - [/] Set up project repository
 - [x] Initialize the project with `npm init`
