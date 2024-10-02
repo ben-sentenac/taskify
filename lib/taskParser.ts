@@ -18,7 +18,7 @@ function setSubTaskStatus(status:string) {
 }
 export async function parseFile(file: string) {
     let fileHandle: fs.FileHandle;
-    const taskDict = {};
+    const taskDict:Record<string, any> = {};
     let currentTask: string | null = null;
     let processingTask = false;//control the processing flow
     try {
@@ -42,7 +42,7 @@ export async function parseFile(file: string) {
                 if (taskMatch) {
                     const taskHeader = taskMatch[1];
                     taskDict[taskHeader] = {
-                        subtask: []
+                        subtasks: []
                     }
                     //update currentTask
                     currentTask = taskHeader;
@@ -55,8 +55,8 @@ export async function parseFile(file: string) {
                         name: subtaskName,
                         status: setSubTaskStatus(subtaskStatus)
                     }
-                    taskDict[currentTask].subtask.push(subtask);
-                    taskDict[currentTask].percentage = calcProgress(taskDict[currentTask].subtask)
+                    taskDict[currentTask].subtasks.push(subtask);
+                    taskDict[currentTask].percentage = calcProgress(taskDict[currentTask].subtasks)
                 }
             }
         }

@@ -1,7 +1,23 @@
 {
+    "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "target": "ES2020"
+      "target": "ES2022",
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "esModuleInterop": true,
+      "strict": true,
+      "resolveJsonModule": true,
+      "removeComments": true,
+      "newLine": "lf",
+      "noUnusedLocals": true,
+      "noFallthroughCasesInSwitch": true,
+      "isolatedModules": true,
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true,
+      "lib": [
+        "ESNext"
+      ],
+      "incremental": true
     }
   }
+  
