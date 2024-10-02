@@ -1,3 +1,4 @@
+//TODO add better type 
 export function deepEqual<T>(obj1:T,obj2:T) {
     //track circular ref
     const seenObj = new Map<object, object>();
@@ -22,7 +23,7 @@ export function deepEqual<T>(obj1:T,obj2:T) {
         if(keysA.length !== keysB.length) return false;
 
         for(let key of keysA) {
-
+            //TODO feat : replace hasOwnPorperty.call by hasOwn()
             if(!Object.prototype.hasOwnProperty.call(b,key)) {
                 return false;
             }
