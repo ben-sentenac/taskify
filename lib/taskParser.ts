@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import readline from 'node:readline/promises';
+import { SnapShot,SubTask } from './types/types.js';
 //
-function calcProgress(subTaskArray:[]) {
+function calcProgress(subTaskArray:SubTask[]) {
     const numberOfCompleted = subTaskArray.filter(({status}) => status === 'Done').length;
     return Number((( numberOfCompleted / subTaskArray.length ) * 100).toFixed(2));
 }
@@ -13,12 +14,14 @@ function setSubTaskStatus(status:string) {
         case '/':
             return 'In Progress';
         case 'x':
-            return 'Done';   
+            return 'Done';
+        default:
+            return 'Not Yet';
     }
 }
 export async function parseFile(file: string) {
     let fileHandle: fs.FileHandle;
-    const taskDict:Record<string, any> = {};
+    const taskDict:SnapShot = {};
     let currentTask: string | null = null;
     let processingTask = false;//control the processing flow
     try {
@@ -42,6 +45,7 @@ export async function parseFile(file: string) {
                 if (taskMatch) {
                     const taskHeader = taskMatch[1];
                     taskDict[taskHeader] = {
+                        percentage:0,
                         subtasks: []
                     }
                     //update currentTask
@@ -51,7 +55,7 @@ export async function parseFile(file: string) {
                     const subtaskStatus = subtaskMatch[1];
                     const subtaskName = subtaskMatch[2];
 
-                    const subtask = {
+                    const subtask:SubTask = {
                         name: subtaskName,
                         status: setSubTaskStatus(subtaskStatus)
                     }
