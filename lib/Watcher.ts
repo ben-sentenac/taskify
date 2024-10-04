@@ -74,8 +74,9 @@ export class Watcher extends EventEmitter {
         } catch (error) {
             if (error instanceof Error) {
                 if (error.name === 'AbortError') {
-                    this.terminate(0, 'Process aborted');
+                    return this.terminate(0, 'Process aborted');
                 }
+                this.terminate(1,error.message);
             }
 
         }
