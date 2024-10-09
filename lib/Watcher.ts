@@ -4,7 +4,7 @@ import { deepEqual } from "./utils.js";
 import { parseFile } from "./taskParser.js";
 import fs from 'node:fs/promises';
 import { basename } from "node:path";
-import { createReadStream } from "node:fs";
+import { Stats, createReadStream } from "node:fs";
 import { createHash } from "node:crypto";
 
 //TODO consider checking if file exits and limit extention name 
@@ -16,10 +16,7 @@ export class Watcher extends EventEmitter {
     readonly ac: AbortController;
     readonly signal: AbortSignal;
     //file state
-    protected fileStats:{
-        size:number | null,
-        mtime:number
-    };
+    protected fileStats:Stats;
 
     protected fileHash:string | null;
 
@@ -35,13 +32,6 @@ export class Watcher extends EventEmitter {
         this.printCount = 0;
         this.ac = new AbortController();
         this.signal = this.ac.signal;
-
-        //file state &&
-        this.fileStats = {
-            size:null,
-            mtime:0
-        }
-
         this.fileHash = null;
     }
 
@@ -97,17 +87,14 @@ export class Watcher extends EventEmitter {
         }
     }
 
-    async setFileStats () {
-        const { size, mtimeMs } = await fs.stat(this.file);
-
-        this.fileStats.size = size;
-        this.fileStats.mtime = mtimeMs;
+    async getFileStats () {
+       return await fs.stat(this.file);
     }
 
     async init() {
         try {
             this.fileHash = await this.hashFileContent();
-            this.setFileStats();
+            this.fileStats = await this.getFileStats();
             const snapshot: SnapShot = await parseFile(this.file);
             this.setSnapshot(snapshot);
             this.emit('print', [this.updatePrintCount(), this.snapshot]);
@@ -159,10 +146,17 @@ export class Watcher extends EventEmitter {
             await this.init();
             console.log(`Start watching file: ${this.file}`);
             const watcher = fs.watch(this.file, { signal });
-            for await (const { eventType } of watcher) {
+            for await (const { eventType } of watcher) {              
                 if (eventType === 'change') {
-                this.emit('shouldUpdate', await parseFile(this.file));
-                   
+                    const newFileStats = await this.getFileStats();
+                    const newHash = await this.hashFileContent();
+                    //TODO 
+                    //also check meta data ? to optimize time 
+                    if(this.fileStats.size !== newFileStats.size  || newHash !== this.fileHash) {
+                        this.emit('shouldUpdate', await parseFile(this.file));
+                        this.fileHash = newHash;
+                        this.fileStats = newFileStats;
+                    }
                 }
             }
         } catch (error) {
