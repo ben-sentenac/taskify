@@ -9,7 +9,7 @@ const _dirname = path.dirname(_filename);
 
 test('TaskParser Test', async (t) => {
 
-    const fileToParse = path.join(_dirname, '..','..', 'fixtures/task.md');
+    const fileToParse = path.join(_dirname, 'fixtures/task-test.md');
 
     await t.test('it should return the correct dictionnary', async (t) => {
         const tasksDict = await parseFile(fileToParse);
