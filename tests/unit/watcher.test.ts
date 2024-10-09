@@ -6,14 +6,30 @@ import { SnapShot } from '../../lib/types/types.js';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseFile } from '../../lib/taskParser.js';
-import {writeFile } from 'node:fs/promises';
-import { unlink } from 'node:fs';
+import { writeFile,unlink } from 'node:fs/promises';
 
 const _DIRNAME_ = dirname(fileURLToPath(import.meta.url));
-console.log(_DIRNAME_)
-test('Watcher class Test', async (t) => {
 
-    const file = resolve(_DIRNAME_, '..', '..', 'fixtures/task.md');
+async function createFileContent(content: string) {
+    try {
+        const tempFilePath = resolve(_DIRNAME_, 'fixtures/my-file.txt');
+        await writeFile(tempFilePath, 'Initial content');
+        return tempFilePath;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function cleanUp(path:string)  {
+   try {
+    await unlink(path)
+   } catch (error) {
+    throw error;
+   }
+}
+
+test('Watcher class Test', async (t) => {
+    const file = resolve(_DIRNAME_, 'fixtures/task-test.md');
     console.log(file);
     const watcher = new Watcher(file);
     await t.test('it should extends EventEmitter', async (t) => {
@@ -57,50 +73,61 @@ test('Watcher class Test', async (t) => {
         assert.ok(watcher.getStatistics().printCount === 1);
     });
 
-    await t.test('Watcher.watch should emit shoulUpdate event on file change', async (t) => {
-        
-        const tempFilePath = resolve(_DIRNAME_, 'fixtures/my-file.txt');
+    await t.test('Watcher.hashFileContent', async (t) => {
+        const tempFilePath = await createFileContent('My first content');
+        const watcher = new Watcher(tempFilePath);
+        await watcher.init();
+        const hashedContent = await watcher.hashFileContent();
+        await t.test('hashFileContent should return string', async () => {
+            assert.ok(typeof hashedContent === 'string');
+        });
+        await t.test('Hash should not change if same content', async () => {
+            assert.ok(hashedContent === await watcher.hashFileContent(tempFilePath));
+        });
+        await t.test('Hash should change if not same content', async () => {
+            await writeFile(tempFilePath,' add content');
+            assert.ok(hashedContent !== await watcher.hashFileContent());
+        });
+    });
 
-        await writeFile(tempFilePath, 'Initial content');
-      
+    await t.test('Watcher.watch should emit shoulUpdate event on file change', async (t) => {
+
+        const tempFilePath = await createFileContent('Initial-Content');
+
         const fileWatcher = new Watcher(tempFilePath);
-      
+
         // Spy on the `emit` method
-        let emittedEvent:string | Symbol | null = null;
+        let emittedEvent: string | Symbol | null = null;
         let emittedData = null;
         fileWatcher.emit = (event, data) => {
             console.log(event);
-          emittedEvent = event;
-          emittedData = data;
-          return emittedEvent ? true:false; 
+            emittedEvent = event;
+            emittedData = data;
+            return emittedEvent ? true : false;
         };
-      
+
         // Start watching the file in the background
         fileWatcher.watch();
-      
+
         // Simulate file change after a slight delay
         await new Promise((resolve) => {
             setTimeout(resolve, 100)
         });  // Wait briefly before modifying the file
         await writeFile(tempFilePath, 'Updated content');
-      
+
         // Wait for the watcher to process the file change
         await new Promise((resolve) => {
-            setTimeout(resolve, 100)}
+            setTimeout(resolve, 100)
+        }
         );
-      
+
         // Assert that emit was called with the correct arguments
         assert.strictEqual(emittedEvent, 'shouldUpdate', 'Expected event should be emitted');
-        assert.deepStrictEqual(emittedData, { }, 'Expected data should match');
+        assert.deepStrictEqual(emittedData, {}, 'Expected data should match');
 
         await fileWatcher.stopWatching();
         // Clean up: Remove the temporary file after the test
-        await new Promise((resolve, reject) => {
-          unlink(tempFilePath, (err) => {
-            if (err) reject(err);
-            resolve(true);
-          });
-        });
+       await cleanUp(tempFilePath);
     })
 
 });
