@@ -19,7 +19,7 @@ function setSubTaskStatus(status:string) {
             return 'Not Yet';
     }
 }
-export async function parseFile(file: string) {
+export async function parseFile(file: string):Promise<SnapShot> {
     let fileHandle: fs.FileHandle;
     const taskDict:SnapShot = {};
     let currentTask: string | null = null;
@@ -60,6 +60,8 @@ export async function parseFile(file: string) {
                         status: setSubTaskStatus(subtaskStatus)
                     }
                     taskDict[currentTask].subtasks.push(subtask);
+                    //TODO 
+                    //mabe calcprogress only if data has change ? 
                     taskDict[currentTask].percentage = calcProgress(taskDict[currentTask].subtasks)
                 }
             }
