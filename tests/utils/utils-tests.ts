@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { unlink } from 'fs/promises';
 import { Readable } from 'stream';
 
 // TypeScript: Typage des paramètres pour plus de clarté
@@ -50,5 +51,13 @@ generateTaskListToFile('big_task_list.md', 1000, 10)
     console.error('Failed to generate task list:', err);
   });
   */
+
+  export async function deleteFile(filePath:string) {
+    try {
+      await unlink(filePath)
+    } catch (error) {
+      throw error;
+    }
+  }
 
   
