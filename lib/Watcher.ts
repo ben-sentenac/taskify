@@ -15,11 +15,8 @@ export class Watcher extends EventEmitter {
     protected printCount: number;
     readonly ac: AbortController;
     readonly signal: AbortSignal;
-    //file state
-    protected fileStats:Stats;
-
     protected fileHash:string | null;
-
+    protected fileStats:Stats | null;
 
     constructor(file: string) {
         super();
@@ -33,6 +30,7 @@ export class Watcher extends EventEmitter {
         this.ac = new AbortController();
         this.signal = this.ac.signal;
         this.fileHash = null;
+        this.fileStats = null;
     }
 
     setSnapshot(snapshot: SnapShot | null) {
@@ -152,7 +150,7 @@ export class Watcher extends EventEmitter {
                     const newHash = await this.hashFileContent();
                     //TODO 
                     //also check meta data ? to optimize time 
-                    if(this.fileStats.size !== newFileStats.size  || newHash !== this.fileHash) {
+                    if(this.fileStats?.size !== newFileStats.size  || newHash !== this.fileHash) {
                         this.emit('shouldUpdate', await parseFile(this.file));
                         this.fileHash = newHash;
                         this.fileStats = newFileStats;

@@ -11,11 +11,18 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+<<<<<<< .merge_file_zKZ8b0
+    "@faker-js/faker": "^9.0.3",
+=======
+    "@types/cli-color": "^2.0.6",
+    "@types/cli-progress": "^3.11.6",
+>>>>>>> .merge_file_nTp4Yl
     "@types/node": "^22.7.4",
     "borp": "^0.17.0",
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "cli-color": "^2.0.4"
+    "cli-color": "^2.0.4",
+    "cli-progress": "^3.12.0"
   }
 }
