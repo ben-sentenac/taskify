@@ -30,7 +30,7 @@ test('TaskParser Test', async (t) => {
                 }
             ]  
         }
-        assert.equal(typeof tasksDict, 'object');
+        
         assert.deepStrictEqual(Object.keys(tasksDict), ['Setup Environment', 'Implement Basic Features', 'Style and Design']);
         assert.deepStrictEqual(tasksDict[Object.keys(tasksDict)[0]], result);
     });
@@ -39,5 +39,12 @@ test('TaskParser Test', async (t) => {
         assert.rejects(async () => {
             await parseFile('/wrongPath')
         }, Error);
+    });
+
+    await t.test('it should parse a very big file', async () => {
+        console.time('parse');
+        const bigTaskDict = await parseFile(path.join(_dirname, 'fixtures/big_task_list.md'));
+        console.timeEnd('parse');
+        assert.equal(typeof bigTaskDict, 'object');
     });
 });
