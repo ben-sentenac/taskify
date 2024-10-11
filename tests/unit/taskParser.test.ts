@@ -55,6 +55,7 @@ test('TaskParser Test', async (t) => {
         const bigTaskDict = await parseFile(path.join(_dirname, 'fixtures/big_task_list.md'));
         console.timeEnd('parse');
         assert.equal(typeof bigTaskDict, 'object');
+        //clean up
         await deleteFile(bigFilePath);
     });
 });
