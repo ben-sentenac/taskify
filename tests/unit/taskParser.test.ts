@@ -44,16 +44,8 @@ test('TaskParser Test', async (t) => {
 
     await t.test('parse a very big file', async () => {
         const bigFilePath = path.join(_dirname,'/fixtures/big_task_list.md');
-        generateTaskListToFile(bigFilePath, 1000, 10)
-            .then(() => {
-                console.log('Task list generation complete.');
-            })
-            .catch((err) => {
-                console.error('Failed to generate task list:', err);
-            });
-        console.time('parse');
+        await generateTaskListToFile(bigFilePath, 1000, 10);
         const bigTaskDict = await parseFile(path.join(_dirname, 'fixtures/big_task_list.md'));
-        console.timeEnd('parse');
         assert.equal(typeof bigTaskDict, 'object');
         //clean up
         await deleteFile(bigFilePath);
