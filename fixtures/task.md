@@ -1,8 +1,8 @@
 # Project Task List
 ### Instructions Subtasks have three statuses:
-- `[-]` = Not Yet (task not started)
-- `[/]` = In Progress (task is currently being worked on)
-- `[x]` = Done (task completed)
+- `[-]` = TODO (task not started)
+- `[/]` = IN_PROGRESS (task is currently being worked on)
+- `[x]` = DONE (task completed)
 To update a subtask, change the symbol before the subtask to reflect its current progress.
 
 --- 

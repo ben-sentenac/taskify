@@ -4,26 +4,26 @@ export const testSnapshot:SnapShot = {
     "Setup Environment": {
       "percentage": 33,
       "subtasks": [
-        {"name": "Install required software (Node.js, Git)", "status": "Not Yet"},
-        {"name": "Set up project repository", "status": "In Progress"},
-        {"name": "Initialize the project with `npm init`", "status": "Done"}
+        {"name": "Install required software (Node.js, Git)", "status": "TODO"},
+        {"name": "Set up project repository", "status": "IN_PROGRESS"},
+        {"name": "Initialize the project with `npm init`", "status": "DONE"}
       ]
     },
     "Implement Basic Features": {
       "percentage": 50,
       "subtasks": [
-        {"name": "Create task input form", "status": "Not Yet"},
-        {"name": "Add functionality to add new tasks", "status": "In Progress"},
-        {"name": "Implement task deletion", "status": "Done"},
-        {"name": "Add task completion toggle", "status": "Done"}
+        {"name": "Create task input form", "status": "TODO"},
+        {"name": "Add functionality to add new tasks", "status": "IN_PROGRESS"},
+        {"name": "Implement task deletion", "status": "DONE"},
+        {"name": "Add task completion toggle", "status": "DONE"}
       ]
     },
     "Style and Design": {
       "percentage": 0,
       "subtasks": [
-        {"name": "Create basic layout and style using CSS", "status": "Not Yet"},
-        {"name": "Make the app responsive", "status": "Not Yet"},
-        {"name": "Add animations for task actions", "status": "Not Yet"}
+        {"name": "Create basic layout and style using CSS", "status": "TODO"},
+        {"name": "Make the app responsive", "status": "TODO"},
+        {"name": "Add animations for task actions", "status": "TODO"}
       ]
     }
   }

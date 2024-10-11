@@ -19,15 +19,15 @@ test('TaskParser Test', async (t) => {
             subtasks: [
                 {
                     name: 'Install required software (Node.js, Git)',
-                    status: 'Done'
+                    status: 'DONE'
                 },
                 {
                     name: 'Set up project repository',
-                    status: 'Done'
+                    status: 'DONE'
                 },
                 {
                     name: 'Initialize the project with `npm init`',
-                    status: 'Done'
+                    status: 'DONE'
                 }
             ]
         }

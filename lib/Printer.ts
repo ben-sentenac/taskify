@@ -20,15 +20,15 @@ export default class Printer {
 
 
     setStatusColor(status:string) {
-        status = status.trim().toLowerCase();
-        if(status === 'done') {
+        status = status.trim();
+        if(status === 'DONE') {
             return cliColor.green(status);
         } 
-        if(status === 'in progress') {
+        if(status === 'IN_PROGRESS') {
             return cliColor.yellow(status);
         }
 
-        if(status === 'not yet') {
+        if(status === 'TODO') {
             return cliColor.red(status);
         }
     }

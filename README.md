@@ -12,7 +12,7 @@ It uses Node.js to read and process the file, allowing you to update
 task progress through a simple Markdown interface.
 
 The application supports tasks and subtasks with three statuses:
-- `Not Yet` (task not started)
+- `To Do` (task not started)
 - `In Progress` (task is currently being worked on)
 - `Done` (task completed)
 
@@ -21,7 +21,7 @@ The progress for each task is automatically calculated based on the number of co
 ## Features
 
 - **Parse tasks and subtasks from a README file**
-- **Track task progress with three states: `Not Yet`, `In Progress`, `Done`**
+- **Track task progress with three states: `To Do`, `In Progress`, `Done`**
 - **Calculate and display task completion percentage**
 - **Read large files line-by-line using Node.js streams for memory efficiency**
 
@@ -59,7 +59,7 @@ Note that for now  only the content between --- delimiter will be parsed
 --- 
 
 # Task: Task Name (33%)
-- [-] Subtask not yet started
+- [-] Subtask To Do started
 - [/] Subtask in progress
 - [x] Subtask completed
 

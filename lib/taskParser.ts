@@ -3,20 +3,20 @@ import readline from 'node:readline/promises';
 import { SnapShot,SubTask } from './types/types.js';
 //
 function calcProgress(subTaskArray:SubTask[]) {
-    const numberOfCompleted = subTaskArray.filter(({status}) => status === 'Done').length;
+    const numberOfCompleted = subTaskArray.filter(({status}) => status === 'DONE').length;
     return Number((( numberOfCompleted / subTaskArray.length ) * 100).toFixed(2));
 }
 
 function setSubTaskStatus(status:string) {
     switch(status) {
         case '-':
-            return 'Not Yet';
+            return 'TODO';
         case '/':
-            return 'In Progress';
+            return 'IN_PROGRESS';
         case 'x':
-            return 'Done';
+            return 'DONE';
         default:
-            return 'Not Yet';
+            return 'TODO';
     }
 }
 export async function parseFile(file: string):Promise<SnapShot> {

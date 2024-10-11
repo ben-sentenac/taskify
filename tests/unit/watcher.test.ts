@@ -41,9 +41,9 @@ test('Watcher class Test', async (t) => {
             "Setup Environment": {
                 "percentage": 33,
                 "subtasks": [
-                    { "name": "Install required software (Node.js, Git)", "status": "Not Yet" },
-                    { "name": "Set up project repository", "status": "In Progress" },
-                    { "name": "Initialize the project with `npm init`", "status": "Done" }
+                    { "name": "Install required software (Node.js, Git)", "status": "TODO" },
+                    { "name": "Set up project repository", "status": "IN_PROGRESS" },
+                    { "name": "Initialize the project with `npm init`", "status": "DONE" }
                 ]
             }
         };
@@ -51,9 +51,9 @@ test('Watcher class Test', async (t) => {
             "Setup Environment": {
                 "percentage": 100,
                 "subtasks": [
-                    { "name": "Install required software (Node.js, Git)", "status": "Done" },
-                    { "name": "Set up project repository", "status": "Done" },
-                    { "name": "Initialize the project with `npm init`", "status": "Done" }
+                    { "name": "Install required software (Node.js, Git)", "status": "DONE" },
+                    { "name": "Set up project repository", "status": "DONE" },
+                    { "name": "Initialize the project with `npm init`", "status": "DONE" }
                 ]
             }
         };
