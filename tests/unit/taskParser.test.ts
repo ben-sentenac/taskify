@@ -19,9 +19,10 @@ test('TaskParser Test', async (t) => {
         }
         assert.equal(tasksArray.length,3);
         assert.equal(tasksArray[0].name, 'Setup Environment');
+        assert.equal(tasksArray[1].subtasks.length, 4);
     });
-    await t.test('it should throws an error if file does not exist', async () => {
-        //TODO
+    await t.test('it should calc the progress correctly', async () => {
+        assert.equal(tasksArray[0].percentage,100);
+        assert.equal(tasksArray[1].percentage,25);
     });
-    //
 });

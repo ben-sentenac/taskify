@@ -18,6 +18,7 @@ function setSubTaskStatus(symbol: string): string {
     return statusMap[symbol.toLowerCase()] || 'pending';
 }
 
+//TODO check if file exists ?
 export async function* parseTaskFromFile({ file, delimiter }: { file: string; delimiter?: string }) {
     const _delimiter = delimiter ?? '---';
     let processingTask = false;

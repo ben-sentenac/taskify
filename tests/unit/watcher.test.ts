@@ -65,8 +65,6 @@ test('Watcher class Test', async (t) => {
         const tempFilePath = await createFileContent('Initial-Content');
 
         const fileWatcher = new Watcher(tempFilePath);
-        let emittedData;
-        let taskArray: Task[] = [];
         // Spy on the `emit` method
         let emittedEvent: string | Symbol | null = null;
 
