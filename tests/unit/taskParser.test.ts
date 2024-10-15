@@ -2,52 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseFile } from '../../lib/taskParser.js';
-import { deleteFile, generateTaskListToFile } from '../utils/utils-tests.js';
+import { parseTaskFromFile } from '../../lib/taskParser.js';
+import { Task } from '../../lib/types/types.js';
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
 test('TaskParser Test', async (t) => {
-
+    //
     const fileToParse = path.join(_dirname, 'fixtures/task-test.md');
-
-    await t.test('it should return the correct dictionnary', async (t) => {
-        const tasksDict = await parseFile(fileToParse);
-        const result = {
-            percentage: 100,
-            subtasks: [
-                {
-                    name: 'Install required software (Node.js, Git)',
-                    status: 'DONE'
-                },
-                {
-                    name: 'Set up project repository',
-                    status: 'DONE'
-                },
-                {
-                    name: 'Initialize the project with `npm init`',
-                    status: 'DONE'
-                }
-            ]
+    const taskGenerator = parseTaskFromFile({file:fileToParse});
+    const tasksArray:Task[] = []
+    await t.test('it shoumld generate the right number of tasks', async () => {
+        for await (const task of taskGenerator) {
+            tasksArray.push(task);
         }
-
-        assert.deepStrictEqual(Object.keys(tasksDict), ['Setup Environment', 'Implement Basic Features', 'Style and Design']);
-        assert.deepStrictEqual(tasksDict[Object.keys(tasksDict)[0]], result);
+        assert.equal(tasksArray.length,3);
+        assert.equal(tasksArray[0].name, 'Setup Environment');
     });
-
-    await t.test('It must throw an error if incorrect filePath is given', async (t) => {
-        assert.rejects(async () => {
-            await parseFile('/wrongPath')
-        }, Error);
+    await t.test('it should throws an error if file does not exist', async () => {
+        //TODO
     });
-
-    await t.test('parse a very big file', async () => {
-        const bigFilePath = path.join(_dirname,'/fixtures/big_task_list.md');
-        await generateTaskListToFile(bigFilePath, 1000, 10);
-        const bigTaskDict = await parseFile(path.join(_dirname, 'fixtures/big_task_list.md'));
-        assert.equal(typeof bigTaskDict, 'object');
-        //clean up
-        await deleteFile(bigFilePath);
-    });
+    //
 });

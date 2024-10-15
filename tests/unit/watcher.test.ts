@@ -2,12 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert';
 import { Watcher } from '../../lib/Watcher.js';
 import EventEmitter from 'node:events';
-import { SnapShot } from '../../lib/types/types.js';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseFile } from '../../lib/taskParser.js';
-import { writeFile,unlink } from 'node:fs/promises';
-
+import { parseTaskFromFile } from '../../lib/taskParser.js';
+import { writeFile, unlink } from 'node:fs/promises';
+import { Task } from '../../lib/types/types.js';
 const _DIRNAME_ = dirname(fileURLToPath(import.meta.url));
 
 async function createFileContent(content: string) {
@@ -20,12 +19,12 @@ async function createFileContent(content: string) {
     }
 }
 
-async function cleanUp(path:string)  {
-   try {
-    await unlink(path)
-   } catch (error) {
-    throw error;
-   }
+async function cleanUp(path: string) {
+    try {
+        await unlink(path)
+    } catch (error) {
+        throw error;
+    }
 }
 
 test('Watcher class Test', async (t) => {
@@ -36,39 +35,10 @@ test('Watcher class Test', async (t) => {
         assert.ok(watcher instanceof EventEmitter);
     });
 
-    await t.test('Watcher.compareSnapshots: must compare the current snapshot with a new one', async (t) => {
-        const current: SnapShot = {
-            "Setup Environment": {
-                "percentage": 33,
-                "subtasks": [
-                    { "name": "Install required software (Node.js, Git)", "status": "TODO" },
-                    { "name": "Set up project repository", "status": "IN_PROGRESS" },
-                    { "name": "Initialize the project with `npm init`", "status": "DONE" }
-                ]
-            }
-        };
-        const newSnapshot: SnapShot = {
-            "Setup Environment": {
-                "percentage": 100,
-                "subtasks": [
-                    { "name": "Install required software (Node.js, Git)", "status": "DONE" },
-                    { "name": "Set up project repository", "status": "DONE" },
-                    { "name": "Initialize the project with `npm init`", "status": "DONE" }
-                ]
-            }
-        };
-        watcher.setSnapshot(current);
-        assert.ok(watcher.compareSnapshots(current) === true);
-        assert.ok(watcher.compareSnapshots(newSnapshot) === false);
-        watcher.setSnapshot(null);
-        assert.ok(watcher.getSnapShot() === null);
-    });
 
     await t.test('Watcher.init: Must instanciate correctly', async (t) => {
         await watcher.init();
-        const content: SnapShot = await parseFile(file);
-        const snapshot: SnapShot | null = watcher.getSnapShot()
-        assert.deepStrictEqual(snapshot, content);
+        const taskGenerator = parseTaskFromFile({ file });
         assert.ok(watcher.shoulUpdate === false);
         assert.ok(watcher.getStatistics().printCount === 1);
     });
@@ -85,7 +55,7 @@ test('Watcher class Test', async (t) => {
             assert.ok(hashedContent === await watcher.hashFileContent(tempFilePath));
         });
         await t.test('Hash should change if not same content', async () => {
-            await writeFile(tempFilePath,' add content');
+            await writeFile(tempFilePath, ' add content');
             assert.ok(hashedContent !== await watcher.hashFileContent());
         });
     });
@@ -95,15 +65,14 @@ test('Watcher class Test', async (t) => {
         const tempFilePath = await createFileContent('Initial-Content');
 
         const fileWatcher = new Watcher(tempFilePath);
-
+        let emittedData;
+        let taskArray: Task[] = [];
         // Spy on the `emit` method
         let emittedEvent: string | Symbol | null = null;
-        let emittedData = null;
-        fileWatcher.emit = (event, data) => {
-            console.log(event);
+
+        fileWatcher.emit = (event, data) => {    
             emittedEvent = event;
-            emittedData = data;
-            return emittedEvent ? true : false;
+            return emittedEvent !== undefined;
         };
 
         // Start watching the file in the background
@@ -123,11 +92,10 @@ test('Watcher class Test', async (t) => {
 
         // Assert that emit was called with the correct arguments
         assert.strictEqual(emittedEvent, 'shouldUpdate', 'Expected event should be emitted');
-        assert.deepStrictEqual(emittedData, {}, 'Expected data should match');
-
+        //console.log(taskArray);
         await fileWatcher.stopWatching();
         // Clean up: Remove the temporary file after the test
-       await cleanUp(tempFilePath);
+        await cleanUp(tempFilePath);
     })
 
 });

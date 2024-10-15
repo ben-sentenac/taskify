@@ -4,6 +4,7 @@ export interface SubTask {
 }
 
 export interface Task  {
+    name:string,
     percentage:number,
     subtasks:SubTask[]
 }
