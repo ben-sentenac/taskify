@@ -12,7 +12,7 @@ It uses Node.js to read and process the file, allowing you to update
 task progress through a simple Markdown interface.
 
 The application supports tasks and subtasks with three statuses:
-- `To Do` (task not started)
+- `Pending` (task not started)
 - `In Progress` (task is currently being worked on)
 - `Done` (task completed)
 
@@ -21,9 +21,9 @@ The progress for each task is automatically calculated based on the number of co
 ## Features
 
 - **Parse tasks and subtasks from a README file**
-- **Track task progress with three states: `To Do`, `In Progress`, `Done`**
+- **Track task progress with three states: `Pending`, `In Progress`, `Done`**
 - **Calculate and display task completion percentage**
-- **Read large files line-by-line using Node.js streams for memory efficiency**
+- **Read large files line-by-line using Node.js streams and async generator for memory efficiency and lazy loading task**
 
 ## Installation
 
@@ -87,11 +87,3 @@ This project is licensed under the MIT License.
 
 # Important: This application is still in development and is not ready for production use.
 
-
-### Key Sections:
-- **Warning:** Added at the top to inform users that the project is under development.
-- **Overview:** A brief explanation of what the project does and its current features.
-- **Installation:** Steps for installing and running the project.
-- **Usage:** A guide on how to structure the `README.md` file for parsing tasks.
-- **Roadmap:** Future features to be added.
-- **License:** Project is licensed under MIT.
