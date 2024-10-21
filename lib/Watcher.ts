@@ -83,6 +83,7 @@ export class Watcher extends EventEmitter {
         } catch (error) {
             //handle eror
             console.error(error);
+            throw error;
         }
     }
     async watch() {
