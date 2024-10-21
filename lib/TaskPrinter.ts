@@ -1,13 +1,10 @@
-import { SnapShot } from "./types/types.js";
+import { Task } from "./types/types.js";
 import { MultiBar, Presets } from 'cli-progress';
 import cliColor from 'cli-color';
-export default class Printer {
-    snapShot: SnapShot;
+export class TaskPrinter {
     multibar: MultiBar
     stream;
-    constructor(snapShot: SnapShot) {
-
-        this.snapShot = snapShot;
+    constructor() {
         this.stream = process.stdout;
         this.multibar = new MultiBar({
             clearOnComplete: false,
@@ -20,15 +17,15 @@ export default class Printer {
 
 
     setStatusColor(status:string) {
-        status = status.trim();
-        if(status === 'DONE') {
+        status = status.trim().toLowerCase();
+        if(status === 'complete') {
             return cliColor.green(status);
         } 
-        if(status === 'IN_PROGRESS') {
+        if(status === 'in-progress') {
             return cliColor.yellow(status);
         }
 
-        if(status === 'TODO') {
+        if(status === 'pending') {
             return cliColor.red(status);
         }
     }
@@ -46,20 +43,19 @@ export default class Printer {
     }
 
 
-    async print() {
-        console.log('-'.repeat(150));
+    async print(taskGenerator:AsyncIterable<Task>) {
+        console.log('-'.repeat(100));
         console.log(new Date().toLocaleString());
         console.log('output:');
-        console.log('-'.repeat(150));
-        Object.keys(this.snapShot).forEach(task => {
-             const bar = this.multibar.create(100, 0);
-            bar.update(this.snapShot[task].percentage, { section: cliColor.blue(task)});
-             this.multibar.stop();
-            for(const subtask of this.snapShot[task].subtasks) {
+        console.log('-'.repeat(100));
+        for await (const task of taskGenerator ) {
+            const bar = this.multibar.create(100,0);
+            bar.update(task.percentage,{ section: cliColor.blue(task.name)});
+            for(const subtask of task.subtasks) {
                 let status = this.setStatusColor(subtask.status);
                 console.log(`${cliColor.blue('-')} ${subtask.name} - ${status}`);
             }
            console.log('-'.repeat(150));
-        });
+        }
     }
 }
