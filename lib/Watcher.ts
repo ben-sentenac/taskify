@@ -8,7 +8,6 @@ import { parseTaskFromFile } from "./taskParser.js";
 //TODO consider checking if file exits and limit extention name 
 export class Watcher extends EventEmitter {
     protected file: string;
-    public shoulUpdate: boolean;
     protected printCount: number;
     readonly ac: AbortController;
     readonly signal: AbortSignal;
@@ -21,7 +20,6 @@ export class Watcher extends EventEmitter {
             throw new TypeError('Argument file must be a string');
         }
         this.file = file;
-        this.shoulUpdate = false;
         this.printCount = 0;
         this.ac = new AbortController();
         this.signal = this.ac.signal;
@@ -99,7 +97,7 @@ export class Watcher extends EventEmitter {
                     //TODO 
                     //also check meta data ? to optimize time 
                     if(this.fileStats?.size !== newFileStats.size  || newHash !== this.fileHash) {
-                        this.emit('shouldUpdate', parseTaskFromFile({file:this.file}));
+                        this.emit('print', parseTaskFromFile({file:this.file}));
                         this.fileHash = newHash;
                         this.fileStats = newFileStats;
                     }
