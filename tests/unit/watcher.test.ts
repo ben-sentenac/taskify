@@ -6,7 +6,6 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseTaskFromFile } from '../../lib/taskParser.js';
 import { writeFile, unlink } from 'node:fs/promises';
-import { Task } from '../../lib/types/types.js';
 const _DIRNAME_ = dirname(fileURLToPath(import.meta.url));
 
 async function createFileContent(content: string) {
@@ -39,7 +38,6 @@ test('Watcher class Test', async (t) => {
     await t.test('Watcher.init: Must instanciate correctly', async (t) => {
         await watcher.init();
         const taskGenerator = parseTaskFromFile({ file });
-        assert.ok(watcher.shoulUpdate === false);
         assert.ok(watcher.getStatistics().printCount === 1);
     });
 
@@ -60,7 +58,7 @@ test('Watcher class Test', async (t) => {
         });
     });
 
-    await t.test('Watcher.watch should emit shoulUpdate event on file change', async (t) => {
+    await t.test('Watcher.watch should emit print event on file change', async (t) => {
 
         const tempFilePath = await createFileContent('Initial-Content');
 
@@ -89,7 +87,7 @@ test('Watcher class Test', async (t) => {
         );
 
         // Assert that emit was called with the correct arguments
-        assert.strictEqual(emittedEvent, 'shouldUpdate', 'Expected event should be emitted');
+        assert.strictEqual(emittedEvent, 'print', 'Expected event should be emitted');
         //console.log(taskArray);
         await fileWatcher.stopWatching();
         // Clean up: Remove the temporary file after the test

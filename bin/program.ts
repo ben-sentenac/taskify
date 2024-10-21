@@ -15,9 +15,5 @@ watcher.on('print', (args) => {
     taskPrinter.print(args[1]);
 });
 
-watcher.on('shoulUpdate',(args) => {
-    taskPrinter.print(args[1]);
-})
-
 
 
