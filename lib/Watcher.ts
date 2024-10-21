@@ -61,7 +61,7 @@ export class Watcher extends EventEmitter {
     }
 
     updatePrintCount() {
-        this.printCount++;
+        return this.printCount++;
     }
 
     getStatistics() {
