@@ -40,14 +40,11 @@ export class Watcher extends EventEmitter {
             const hash = createHash('sha256');
             fileStream.on('readable', () => {
                 let chunk;
-
                 while (null !== (chunk = fileStream.read())) {
                     //update hash 
                     hash.update(chunk);
                 }
-
             });
-
             fileStream.on('end', () => {
                 resolve(hash.digest('hex'));
             });
@@ -77,10 +74,10 @@ export class Watcher extends EventEmitter {
         try {
             this.fileHash = await this.hashFileContent();
             this.fileStats = await this.getFileStats();
-            this.emit('print', [this.updatePrintCount(),parseTaskFromFile({file:this.file})]);
+            this.emit('print', this.updatePrintCount(),parseTaskFromFile({file:this.file}));
         } catch (error) {
             //handle eror
-            console.error(error);
+            console.error('ERROR',error);
             throw error;
         }
     }
@@ -88,7 +85,6 @@ export class Watcher extends EventEmitter {
         const signal = this.signal;
         try {
             await this.init();
-            console.log(`Start watching file: ${this.file}`);
             const watcher = fs.watch(this.file, { signal });
             for await (const { eventType } of watcher) {              
                 if (eventType === 'change') {
@@ -96,8 +92,8 @@ export class Watcher extends EventEmitter {
                     const newHash = await this.hashFileContent();
                     //TODO 
                     //also check meta data ? to optimize time 
-                    if(this.fileStats?.size !== newFileStats.size  || newHash !== this.fileHash) {
-                        this.emit('print', parseTaskFromFile({file:this.file}));
+                    if(newHash !== this.fileHash) {
+                        this.emit('print',this.updatePrintCount(), parseTaskFromFile({file:this.file}));
                         this.fileHash = newHash;
                         this.fileStats = newFileStats;
                     }
@@ -125,5 +121,3 @@ export class Watcher extends EventEmitter {
     }
 }
 
-//terminate(0,'process aborted');
-//terminate(1,'unHandled Promise');

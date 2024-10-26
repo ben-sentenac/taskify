@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "bin": {
+    "taskify":"./bin/program.js"
+  },
   "scripts": {
     "test": "borp",
-    "dev": "tsc -w & node --watch dist/lib/taskParser.js"
+    "build": "tsc",
+    "dev:start":"node bin/program.js"
   },
   "author": "",
   "license": "ISC",
