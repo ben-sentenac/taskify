@@ -19,6 +19,7 @@ function setSubTaskStatus(symbol: string): string {
 }
 
 //TODO check if file exists ?
+//TODO add task id propertyu to edit filter add and delete task ?
 export async function* parseTaskFromFile({ file, delimiter }: { file: string; delimiter?: string }) {
     const _delimiter = delimiter ?? '---';
     let processingTask = false;
