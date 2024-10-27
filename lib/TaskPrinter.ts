@@ -3,7 +3,6 @@ import cliColor from 'cli-color';
 import { Task } from './types/types.js';
 import process from 'node:process';
 import { Direction } from 'node:readline';
-import figlet from 'figlet';
 
 export class TaskPrinter {
     private readonly multibar: any;
@@ -21,11 +20,6 @@ export class TaskPrinter {
             format: '{bar} | {percentage}% | {section}',
         }, cliProgress.Presets.shades_classic);
         */
-        console.log('-'.repeat(50));
-       console.log(figlet.textSync('Taskify'));
-       console.log('Version:1.0');
-       console.log('Cli Task list manager');
-       console.log('-'.repeat(50));
     }
 
     // Utility function to set status color

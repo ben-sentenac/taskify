@@ -82,7 +82,7 @@ test('Watcher class Test', async (t) => {
         }
         );
         // Assert that emit was called with the correct arguments
-        assert.strictEqual(emittedEvent, 'print', 'Expected event should be emitted');
+        assert.strictEqual(emittedEvent, 'update', 'Expected event should be emitted');
         //console.log(taskArray);
         await fileWatcher.stopWatching();
         // Clean up: Remove the temporary file after the test

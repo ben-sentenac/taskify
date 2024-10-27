@@ -13,6 +13,8 @@ export class Watcher extends EventEmitter {
     readonly signal: AbortSignal;
     protected fileHash:string | null;
     protected fileStats:Stats | null;
+    protected readonly startWatchingMessage:string;
+    protected abortMessage:string;
 
     constructor(file: string) {
         super();
@@ -25,6 +27,8 @@ export class Watcher extends EventEmitter {
         this.signal = this.ac.signal;
         this.fileHash = null;
         this.fileStats = null;
+        this.startWatchingMessage = `Watching file ${basename(this.file)}`;
+        this.abortMessage = 'Process Aborted!';
     }
 
 
@@ -74,39 +78,44 @@ export class Watcher extends EventEmitter {
         try {
             this.fileHash = await this.hashFileContent();
             this.fileStats = await this.getFileStats();
-            this.emit('print', this.updatePrintCount(),parseTaskFromFile({file:this.file}));
+            this.emit('update', this.updatePrintCount(),parseTaskFromFile({file:this.file}));
         } catch (error) {
             //handle eror
             console.error('ERROR',error);
             throw error;
         }
     }
+
+    async checkFileChange ():Promise<boolean> {
+        const newFileStats = await this.getFileStats();
+        const newHash = await this.hashFileContent();
+        //also check meta data ? to optimize time 
+        if(newHash !== this.fileHash) {
+            this.emit('update',this.updatePrintCount(), parseTaskFromFile({file:this.file}));
+            this.fileHash = newHash;
+            this.fileStats = newFileStats;
+            return true;
+        }
+        return false;
+    }
+
     async watch() {
         const signal = this.signal;
-        try {
+        try { 
             await this.init();
             const watcher = fs.watch(this.file, { signal });
             for await (const { eventType } of watcher) {              
                 if (eventType === 'change') {
-                    const newFileStats = await this.getFileStats();
-                    const newHash = await this.hashFileContent();
-                    //TODO 
-                    //also check meta data ? to optimize time 
-                    if(newHash !== this.fileHash) {
-                        this.emit('print',this.updatePrintCount(), parseTaskFromFile({file:this.file}));
-                        this.fileHash = newHash;
-                        this.fileStats = newFileStats;
-                    }
+                    await this.checkFileChange();
                 }
             }
         } catch (error) {
             if (error instanceof Error) {
                 if (error.name === 'AbortError') {
-                    return this.terminate(0, 'Process aborted');
+                    return this.terminate(0, this.abortMessage);
                 }
                 this.terminate(1, error.message);
             }
-
         }
     }
 

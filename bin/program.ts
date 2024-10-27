@@ -14,5 +14,4 @@ program
 
 program.addCommand(watchCommand);
 
-
 program.parse(process.argv);
