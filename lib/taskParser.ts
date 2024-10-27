@@ -46,10 +46,8 @@ export async function* parseTaskFromFile({ file, delimiter }: { file: string; de
                 continue;
             }
             if (processingTask) {
-                //
                 const taskMatch = taskRegExp.exec(line);
                 const subtaskMatch = subtaskRegExp.exec(line);
-
                 if (taskMatch) {
                      // If we encounter a new task while the current one is being processed, yield the current task
                      if (currentTask) {
@@ -57,13 +55,11 @@ export async function* parseTaskFromFile({ file, delimiter }: { file: string; de
                         yield currentTask;
                     }
                     const taskHeader = taskMatch[1];
-
                     currentTask = {
                         name: taskHeader,
                         percentage: 0,
                         subtasks: []//array of subtask
                     };
-
                     currentTaskHeader = taskHeader;
                 }
                 if (subtaskMatch && currentTaskHeader) {
@@ -76,7 +72,6 @@ export async function* parseTaskFromFile({ file, delimiter }: { file: string; de
                     currentTask?.subtasks.push(subTask);
                 }
             }
-
         }
          // If there's any remaining task after the loop, yield it
         if(currentTask){

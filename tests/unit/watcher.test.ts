@@ -6,6 +6,8 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseTaskFromFile } from '../../lib/taskParser.js';
 import { writeFile, unlink } from 'node:fs/promises';
+
+
 const _DIRNAME_ = dirname(fileURLToPath(import.meta.url));
 
 async function createFileContent(content: string) {
@@ -17,7 +19,6 @@ async function createFileContent(content: string) {
         throw error;
     }
 }
-
 async function cleanUp(path: string) {
     try {
         await unlink(path)
@@ -25,7 +26,6 @@ async function cleanUp(path: string) {
         throw error;
     }
 }
-
 test('Watcher class Test', async (t) => {
     const file = resolve(_DIRNAME_, 'fixtures/task-test.md');
     console.log(file);
@@ -33,14 +33,11 @@ test('Watcher class Test', async (t) => {
     await t.test('it should extends EventEmitter', async (t) => {
         assert.ok(watcher instanceof EventEmitter);
     });
-
-
     await t.test('Watcher.init: Must instanciate correctly', async (t) => {
         await watcher.init();
         const taskGenerator = parseTaskFromFile({ file });
         assert.ok(watcher.getStatistics().printCount === 1);
     });
-
     await t.test('Watcher.hashFileContent', async (t) => {
         const tempFilePath = await createFileContent('My first content');
         const watcher = new Watcher(tempFilePath);
@@ -57,7 +54,6 @@ test('Watcher class Test', async (t) => {
             assert.ok(hashedContent !== await watcher.hashFileContent());
         });
     });
-
     await t.test('Watcher.watch should emit print event on file change', async (t) => {
 
         const tempFilePath = await createFileContent('Initial-Content');
@@ -85,7 +81,6 @@ test('Watcher class Test', async (t) => {
             setTimeout(resolve, 100)
         }
         );
-
         // Assert that emit was called with the correct arguments
         assert.strictEqual(emittedEvent, 'print', 'Expected event should be emitted');
         //console.log(taskArray);

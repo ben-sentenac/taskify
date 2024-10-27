@@ -1,16 +1,18 @@
+#! /usr/bin/env node
 import process from 'node:process';
 import { join } from 'node:path';
-import { Watcher } from '../lib/Watcher.js';
-import { TaskPrinter } from '../lib/TaskPrinter.js';
+import { Command } from 'commander';
+import { watchCommand } from '../lib/commands/watch.command.js';
+import figlet from 'figlet';
 
-const watcherFile = join(process.cwd(),'.tasks.md');
-const watcher = new Watcher(watcherFile);
-const taskPrinter = new TaskPrinter();
-watcher.watch();
-console.log('watching...');
-watcher.on('print', async (count,taskGenerator) => { 
-    await taskPrinter.print(taskGenerator);
-});
+const program = new Command();
+
+program
+.name('Task-cli')
+.description('CLI for managing task files')
+.version('1.0.0');
+
+program.addCommand(watchCommand);
 
 
-
+program.parse(process.argv);

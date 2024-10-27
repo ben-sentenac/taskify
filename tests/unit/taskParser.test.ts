@@ -12,8 +12,9 @@ test('TaskParser Test', async (t) => {
     //
     const fileToParse = path.join(_dirname, 'fixtures/task-test.md');
     const taskGenerator = parseTaskFromFile({file:fileToParse});
-    const tasksArray:Task[] = []
-    await t.test('it shoumld generate the right number of tasks', async () => {
+    const tasksArray:Task[] = [];
+    //TODO test error handling case
+    await t.test('it should generate the right number of tasks', async () => {
         for await (const task of taskGenerator) {
             tasksArray.push(task);
         }

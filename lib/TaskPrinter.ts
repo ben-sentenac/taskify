@@ -1,9 +1,9 @@
-import cliProgress from 'cli-progress';
+//import cliProgress from 'cli-progress';
 import cliColor from 'cli-color';
 import { Task } from './types/types.js';
 import process from 'node:process';
 import { Direction } from 'node:readline';
-import { pipeline } from 'node:stream/promises';
+import figlet from 'figlet';
 
 export class TaskPrinter {
     private readonly multibar: any;
@@ -21,6 +21,11 @@ export class TaskPrinter {
             format: '{bar} | {percentage}% | {section}',
         }, cliProgress.Presets.shades_classic);
         */
+        console.log('-'.repeat(50));
+       console.log(figlet.textSync('Taskify'));
+       console.log('Version:1.0');
+       console.log('Cli Task list manager');
+       console.log('-'.repeat(50));
     }
 
     // Utility function to set status color
@@ -40,7 +45,7 @@ export class TaskPrinter {
     }
 
     async print(taskGenerator: AsyncIterable<Task>) {
-          await this.clearlines(this.writtenLines);
+        await this.clearlines(this.writtenLines);
         const completedTasks: number[] = [];
         let output = '';
           // Map to store progress bars for each task
@@ -69,7 +74,9 @@ export class TaskPrinter {
             this.stream.write(output);
         });
         
-        this.stream.write(cliColor.magenta(`\nTotal Project Completion: ${this.totalCompletedTask(completedTasks)}%\n\n`)); 
+        const total = this.totalCompletedTask(completedTasks);
+        const message = !isNaN(total) ? `\nTotal Project Completion: ${this.totalCompletedTask(completedTasks)}%\n\n`: `No tasks to print`;
+        this.stream.write(cliColor.magenta(message)); 
     }
 
     moveCursor(positionX: number, positionY: number) {
