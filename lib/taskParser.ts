@@ -32,6 +32,8 @@ export async function* parseTaskFromFile({ file, delimiter }: { file: string; de
             input: fileReadStream,
             crlfDelay: Infinity
         });
+        const taskRegExp = RegExp(/^# Task: ([\w ]+)/);
+        const subtaskRegExp= RegExp(/^\s*-\s*\[\s*([-x/])\]\s*(.*)$/);
         for await (const line of rl) {
             const trimmedLine = line.trim();
             if (trimmedLine === _delimiter) {
@@ -45,8 +47,9 @@ export async function* parseTaskFromFile({ file, delimiter }: { file: string; de
             }
             if (processingTask) {
                 //
-                const taskMatch = RegExp(/^# Task: ([\w ]+)/).exec(line);
-                const subtaskMatch = RegExp(/^\s*-\s*\[\s*([-x/])\]\s*(.*)$/).exec(line);
+                const taskMatch = taskRegExp.exec(line);
+                const subtaskMatch = subtaskRegExp.exec(line);
+
                 if (taskMatch) {
                      // If we encounter a new task while the current one is being processed, yield the current task
                      if (currentTask) {
