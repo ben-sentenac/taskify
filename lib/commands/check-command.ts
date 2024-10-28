@@ -1,8 +1,9 @@
 import { Command } from "commander";
-import { checkFile,setStatusColor } from "./command-utils.js";
+import { checkFile,printProgramFooter,printProgramHeader,setStatusColor } from "./command-utils.js";
 import { parseTaskFromFile } from "../taskParser.js";
 import cliColor from 'cli-color';
-
+import process from 'node:process';
+import { join } from 'node:path';
 
 interface CheckCommandOptions {
     detailed:boolean,
@@ -11,7 +12,7 @@ interface CheckCommandOptions {
 
 export const checkCommand = new Command('check')
 .description('Prints the total completion percentage of tasks and subtasks, along with detailed progress.')
-.argument('<file>', 'The .tasks.md file to watch')
+.argument('[file]', 'The .tasks.md file to watch',join(process.cwd(),'tasks.md'))
 .option('-d, --detailed','Show all tasks and subtasks with their completion status.',false)
 .action(async (file:string,options:CheckCommandOptions) => {
     await checkFile(file);
@@ -20,9 +21,7 @@ export const checkCommand = new Command('check')
     let taskCount = 0;
     const tasksIterator = parseTaskFromFile({file});
     const header = !detailed ? 'Output summary:' : 'Detailled output:';
-    console.log('_'.repeat(50));
-    console.log();
-    console.log(cliColor.blue.underline('Taskify v1.0'));
+    printProgramHeader();
     console.log(header);
     for await (const task of tasksIterator) {
         const { percentage,name,subtasks } = task
@@ -40,6 +39,5 @@ export const checkCommand = new Command('check')
     if(taskCount > 0) {
         console.log(`${cliColor.magenta('## Total Project completion')} ==> ${cliColor.yellow((totalCompletion / taskCount).toFixed(1) + '%' )}`);
     }
-    console.log('_'.repeat(50));
-    console.log();
+    printProgramFooter();
 })

@@ -80,6 +80,7 @@ The application will parse the tasks and output their progress and status.
 - [x] TaskParser function:parse task and subtask from a md file
 - [x] Add watcher class: watch file change
 - [x] Add watch, check, template command to cli
+- [ ] improve help
 - [ ] Refactor and improve print functionnality and fix console output update when clearing terminal
 - [ ] Add support for editing tasks directly from the cli (edit,delete,update)
 - [ ] Implement a UI for better interaction with tasks (fastify server or api)

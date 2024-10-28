@@ -1,6 +1,10 @@
 import cliColor from 'cli-color';
 import { fileExists } from '../utils.js';
 import process from 'node:process';
+
+import constants from '../constants.js';
+
+const { version,author,repo,pDescription,pName } = constants;
 // Utility function to set status color
 
 export function setStatusColor(status: string): string {
@@ -19,16 +23,32 @@ export function totalCompletedTask(completedTasks: number[]): number {
 //TODO gracefull shutdown and proper handle error into a class ?
 export async function checkFile(file:string) {
     if(! await fileExists(file)) {
-        process.stderr.write(`ERROR: The file ${file} does not exist\n`);
-       gracefullExit(1,2000);
+        printProgramHeader();
+        process.stderr.write(`${cliColor.red('ERROR')}: The file ${file} does not exist\n`);
+        printProgramFooter();
+        gracefullExit(1);
     }
 }
 
-export function gracefullExit(code:0 | 1 = 0,delay:number = 1000,unref = false) {
+export function gracefullExit(code:0 | 1 = 0,delay:number = 0,unref = false) {
     const timeout = setTimeout(() => {
         process.exit(code);
     },delay); 
     if(unref) {
         timeout.unref();
     }
+}
+
+export function printProgramHeader() {
+    console.log('_'.repeat(50));
+    console.log();
+    console.log(cliColor.blue.underline(`${pName} V${version}`));
+    console.log(`Author:${author}`);
+    console.log(`Repository: ${repo}`);
+    console.log(`Description: ${pDescription}`);
+}
+
+export function printProgramFooter() {
+    console.log('_'.repeat(50));
+    console.log();
 }

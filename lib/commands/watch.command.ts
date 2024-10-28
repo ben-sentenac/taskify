@@ -4,7 +4,7 @@ import cliColor from 'cli-color';
 import process from "process";
 import { join } from 'node:path';
 import { SubTask, Task } from "../types/types.js";
-import { checkFile, setStatusColor } from "./command-utils.js";
+import { checkFile, printProgramFooter, printProgramHeader, setStatusColor } from "./command-utils.js";
 import { fileExists } from "../utils.js";
 /**
  * Continuously monitor the .tasks.md file
@@ -24,7 +24,7 @@ interface WatchCommandOptions {
 //TODO mabe tracjk the printed line to refresh the terminal more clearly
 export const watchCommand = new Command('watch')
     .description('Watch a .tasks.md file for changes')
-    .argument('<file>', 'The .tasks.md file to watch')
+    .argument('[file]', 'The .tasks.md file to watch',join(process.cwd(),'tasks.md'))
     .option('-s, --show-completion', 'Display overall project completion percentage', false)
     .option('-v, --verbose', 'Show detailed information on each change', false)
     .option('-a, --stop-after <num>', 'Stop watching after a certain number of changes', '0')
@@ -37,11 +37,9 @@ export const watchCommand = new Command('watch')
             changeCount++;
             // Clear the terminal to refresh the output
             console.clear();
-            console.log('_'.repeat(50));
-            console.log();
-            console.log(cliColor.blue.underline('Taskify v1.0'));
+            printProgramHeader();
+            console.log(cliColor.magentaBright('--Watching mode--'));
             console.log(`\nFile Change detected: ${count}\n`);
-
             let totalCompletion = 0;
             let taskCount = 0;
 
@@ -67,8 +65,7 @@ export const watchCommand = new Command('watch')
                 console.log(`\nReached maximum of ${stopAfter} changes. Stopping watch file...`);
                 await watcher.stopWatching();
             }
-            console.log('_'.repeat(50));
-            console.log();
+           printProgramFooter();
         }); 
         await watcher.watch();
     });
