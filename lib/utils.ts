@@ -1,3 +1,5 @@
+import { access } from "fs/promises";
+
 //TODO add better type 
 export function deepEqual<T>(obj1:T,obj2:T) {
     //track circular ref
@@ -35,4 +37,14 @@ export function deepEqual<T>(obj1:T,obj2:T) {
         return true;
     }
     return compare(obj1,obj2);
+}
+
+
+export async function fileExists(file:string) {
+    try {
+        await access(file);
+        return true;
+    } catch (error) {
+        return false;
+    }
 }

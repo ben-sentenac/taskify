@@ -14,14 +14,14 @@ task progress through a simple Markdown interface.
 The application supports tasks and subtasks with three statuses:
 - `Pending` (task not started)
 - `In Progress` (task is currently being worked on)
-- `Done` (task completed)
+- `Complete` (task completed)
 
 The progress for each task is automatically calculated based on the number of completed subtasks.
 
 ## Features
 
 - **Parse tasks and subtasks from a README file**
-- **Track task progress with three states: `Pending`, `In Progress`, `Done`**
+- **Track task progress with three states: `Pending`, `In Progress`, `Complete`**
 - **Calculate and display task completion percentage**
 - **Read large files line-by-line using Node.js streams and async generator for memory efficiency and lazy loading task**
 
@@ -77,10 +77,12 @@ Note that for now  only the content between --- delimiter will be parsed
 The application will parse the tasks and output their progress and status.
 
 ## Roadmap 
-
-> [ ] Add support for editing tasks directly from the app
-> [ ] Implement a UI for better interaction with tasks
-> [ ] Add automated tests
+- [x] TaskParser function:parse task and subtask from a md file
+- [x] Add watcher class: watch file change
+- [x] Add watch, check, template command to cli
+- [ ] Refactor and improve print functionnality and fix console output update when clearing terminal
+- [ ] Add support for editing tasks directly from the cli (edit,delete,update)
+- [ ] Implement a UI for better interaction with tasks (fastify server or api)
 
 ## License
 This project is licensed under the MIT License.
