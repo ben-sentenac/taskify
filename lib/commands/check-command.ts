@@ -12,7 +12,7 @@ interface CheckCommandOptions {
 
 export const checkCommand = new Command('check')
 .description('Prints the total completion percentage of tasks and subtasks, along with detailed progress.')
-.argument('[file]', 'The .tasks.md file to watch',join(process.cwd(),'tasks.md'))
+.argument('[file]', 'The .tasks.md file to watch',join(process.cwd(),'todos.md'))
 .option('-d, --detailed','Show all tasks and subtasks with their completion status.',false)
 .action(async (file:string,options:CheckCommandOptions) => {
     await checkFile(file);
