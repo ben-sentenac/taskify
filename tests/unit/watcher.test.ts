@@ -35,7 +35,7 @@ test('Watcher class Test', async (t) => {
     });
     await t.test('Watcher.init: Must instanciate correctly', async (t) => {
         await watcher.init();
-        const taskGenerator = parseTaskFromFile({ file });
+        parseTaskFromFile({ file });
         assert.ok(watcher.getStatistics().printCount === 1);
     });
     await t.test('Watcher.hashFileContent', async (t) => {

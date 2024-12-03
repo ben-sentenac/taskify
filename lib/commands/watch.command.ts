@@ -5,7 +5,7 @@ import process from "process";
 import { join } from 'node:path';
 import { SubTask, Task } from "../types/types.js";
 import { checkFile, printProgramFooter, printProgramHeader, setStatusColor } from "./command-utils.js";
-import { fileExists } from "../utils.js";
+//import { fileExists } from "../utils.js";
 /**
  * Continuously monitor the .tasks.md file
  * Description: Watches for changes in the .tasks.md file, parsing and displaying the updated status in real time.
