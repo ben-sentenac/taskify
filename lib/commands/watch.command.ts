@@ -1,11 +1,8 @@
 import { Command } from "commander";
 import { Watcher } from "../Watcher.js";
 import cliColor from 'cli-color';
-import process from "process";
-import { join } from 'node:path';
 import { SubTask, Task } from "../types/types.js";
-import { checkFile, printProgramFooter, printProgramHeader, setStatusColor } from "./command-utils.js";
-//import { fileExists } from "../utils.js";
+import { checkFile, handleError, printProgramFooter, printProgramHeader, setStatusColor } from "./command-utils.js";
 /**
  * Continuously monitor the .tasks.md file
  * Description: Watches for changes in the .tasks.md file, parsing and displaying the updated status in real time.
@@ -16,19 +13,18 @@ interface WatchCommandOptions {
     verbose:boolean,
     stopAfter:string
 };
-
-
 //TODO add silent options
 //TODO refactor and add color output 
 //TODO add GUI options:start a server and open UI Interface to manage task
 //TODO mabe tracjk the printed line to refresh the terminal more clearly
 export const watchCommand = new Command('watch')
-    .description('Watch a .tasks.md file for changes')
-    .argument('[file]', 'The .tasks.md file to watch',join(process.cwd(),'tasks.md'))
+    .description('Watch a .tasks.md or todos.md file for changes')
+    .argument('[file]', 'The .md file to watch')
     .option('-s, --show-completion', 'Display overall project completion percentage', false)
     .option('-v, --verbose', 'Show detailed information on each change', false)
     .option('-a, --stop-after <num>', 'Stop watching after a certain number of changes', '0')
     .action(async (file:string, options:WatchCommandOptions) => {
+        if(!file) handleError(new Error('You must provide a valid filepath'));
         await checkFile(file);
         const {showCompletion, verbose, stopAfter } = options;
         const watcher = new Watcher(file);
@@ -38,11 +34,11 @@ export const watchCommand = new Command('watch')
             // Clear the terminal to refresh the output
             console.clear();
             printProgramHeader();
+            
             console.log(cliColor.magentaBright('--Watching mode--'));
             console.log(`\nFile Change detected: ${count}\n`);
             let totalCompletion = 0;
             let taskCount = 0;
-
             for await (const task of tasksIterator) {
                 taskCount++;
                 if (showCompletion) {

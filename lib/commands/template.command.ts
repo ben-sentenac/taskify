@@ -3,10 +3,10 @@ import { Command } from 'commander';
 import cliColor from 'cli-color';
 
 export const templateCommand = new Command('template')
-    .description('Show template and editing instructions for .tasks.md file')
+    .description('Show template and editing instructions for .md file')
     .action(() => {
         console.log('_'.repeat(50) + '\n');
-        console.log(`To edit your .tasks.md file, use the following format:\n`);
+        console.log(`To edit your .md file, use the following format:\n`);
 
         console.log(`### Task Format:
 ${cliColor.blue(`---

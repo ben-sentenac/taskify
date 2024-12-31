@@ -7,6 +7,13 @@ import constants from '../constants.js';
 const { version,author,repo,pDescription,pName } = constants;
 // Utility function to set status color
 
+export function handleError(error:Error) {
+    printProgramHeader();
+    process.stderr.write(`${cliColor.red('ERROR')}: ${error.message}\n`);
+    printProgramFooter();
+    process.exit(1);
+}
+
 export function setStatusColor(status: string): string {
     switch (status) {
         case 'complete': return cliColor.green('complete');
@@ -15,30 +22,17 @@ export function setStatusColor(status: string): string {
         default: return status;
     }
 }
-
 export function totalCompletedTask(completedTasks: number[]): number {
     const total = completedTasks.reduce((sum, val) => sum + val, 0);
     return Math.round(total / completedTasks.length);
 }
 //TODO gracefull shutdown and proper handle error into a class ?
 export async function checkFile(file:string) {
-    if(! await fileExists(file)) {
-        printProgramHeader();
-        process.stderr.write(`${cliColor.red('ERROR')}: The file ${file} does not exist\n`);
-        printProgramFooter();
-        gracefullExit(1);
+    const exists = await fileExists(file)
+    if(!exists) {
+       handleError(new Error(`The file <${file}> doesn't exists!`));
     }
 }
-
-export function gracefullExit(code:0 | 1 = 0,delay:number = 0,unref = false) {
-    const timeout = setTimeout(() => {
-        process.exit(code);
-    },delay); 
-    if(unref) {
-        timeout.unref();
-    }
-}
-
 export function printProgramHeader() {
     console.log('_'.repeat(50));
     console.log();

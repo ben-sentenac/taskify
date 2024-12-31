@@ -35,6 +35,7 @@ export async function* parseTaskFromFile({ file, delimiter }: { file: string; de
         });
         const taskRegExp = RegExp(/^# Task: ([\w ]+)/);
         const subtaskRegExp= RegExp(/^\s*-\s*\[\s*(.)\]\s*(.*)$/);
+
         for await (const line of rl) {
             const trimmedLine = line.trim();
             if (trimmedLine === _delimiter) {

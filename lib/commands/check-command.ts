@@ -2,8 +2,7 @@ import { Command } from "commander";
 import { checkFile,printProgramFooter,printProgramHeader,setStatusColor } from "./command-utils.js";
 import { parseTaskFromFile } from "../taskParser.js";
 import cliColor from 'cli-color';
-import process from 'node:process';
-import { join } from 'node:path';
+import { handleError } from "./command-utils.js";
 
 interface CheckCommandOptions {
     detailed:boolean,
@@ -12,17 +11,16 @@ interface CheckCommandOptions {
 
 export const checkCommand = new Command('check')
 .description('Prints the total completion percentage of tasks and subtasks, along with detailed progress.')
-.argument('[file]', 'The .tasks.md file to watch',join(process.cwd(),'todos.md'))
+.argument('[file]', 'The file to watch')
 .option('-d, --detailed','Show all tasks and subtasks with their completion status.',false)
 .action(async (file:string,options:CheckCommandOptions) => {
+    if(!file) handleError(new Error('You must provide a valid filepath'));
     await checkFile(file);
     const { detailed } = options;
     let totalCompletion = 0;
     let taskCount = 0;
     const tasksIterator = parseTaskFromFile({file});
-    const header = !detailed ? 'Output summary:' : 'Detailled output:';
     printProgramHeader();
-    console.log(header);
     for await (const task of tasksIterator) {
         const { percentage,name,subtasks } = task
         const formattedTask = cliColor.green(name);
